@@ -13245,6 +13245,3 @@ declare namespace _ {
     cancel(): void;
   }
 }
-
-export = _;
-export as namespace _;
