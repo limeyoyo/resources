@@ -11,7 +11,7 @@ interface Utils {
   espApi: EspApi;
   athModalService: NzModalService & ModalCustom;
   athMessageService: NzMessageService & MessageCustom;
-  lodash: _.LoDashStatic;
+  lodash: typeof _.LoDashStatic;
   dayjs: typeof Dayjs;
 }
 
