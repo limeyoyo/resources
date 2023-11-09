@@ -6,16 +6,4105 @@ interface HookOptions {
   utils: Utils;
 }
 
+export interface Context {
+  /**
+   * 数据一致性异常排除任务卡id
+   */
+  abnormalWorkitemId: number;
+  /**
+   * 代办项id
+   */
+  backlogId: number;
+  /**
+   * 活动形态类型
+   */
+  category: string;
+  /**
+   * 客户端来源
+   */
+  clientAgent: string;
+  /**
+   * 数据来源：PTM表示来源于PTM，其他表示ATMC
+   */
+  dataFrom: string;
+  /**
+   * 表格组件数据字段名称
+   */
+  gridSchema: string;
+  /**
+   * 执行者performer或者当责者charge
+   */
+  identity: string;
+  /**
+   * 是否属于被分享的页面
+   */
+  isShared: boolean;
+  /**
+   * 是否为超级管理员
+   */
+  isSuperAdmin: boolean;
+  /**
+   * 是否是流程引擎
+   */
+  isTaskEngine: boolean;
+  /**
+   * 语言类别
+   */
+  locale: string;
+  /**
+   * 页面场景
+   * [project-card,project-detail,task-card,task-detail]
+   */
+  pageCode: string;
+  /**
+   * 活动形态分类
+   */
+  pattern: string;
+  /**
+   * 提交唯一键
+   */
+  submitId: string;
+  /**
+   * 任务类型
+   */
+  taskType: string;
+  /**
+   * 租户ID
+   */
+  tenantId: string;
+  /**
+   * 关卡ID
+   */
+  tmActivityId: string;
+  /**
+   * 关卡名称
+   */
+  tmActivityName: string;
+  /**
+   * 项目名称
+   */
+  tmProjectId: string;
+  /**
+   * 调用链ID
+   */
+  traceId: string;
+}
+
+interface DataStore<K, V> {
+  readonly size: number;
+  get: (key: string) => any;
+  set: (key: string) => boolean;
+  has: (key: string) => boolean;
+  delete: (key: string) => boolean;
+  clear: () => void;
+  forEach(callbackfn: (value: V, key: string) => void, thisArg?: any): void;
+  /**
+   * @param proxy 代理store对象,可以手动进行操作
+   * @returns
+   */
+  subscribe: (proxy: any) => void;
+}
+
 interface Utils {
   http: HttpClient;
   espApi: EspApi;
   athModalService: NzModalService & ModalCustom;
   athMessageService: NzMessageService & MessageCustom;
-  lodash: typeof _.LoDashStatic;
+  lodash: typeof _lo.LoDashStatic;
   dayjs: typeof dayjs;
 }
 
-declare namespace _ {
+declare class HttpClient {
+  private handler;
+  constructor(handler: HttpHandler);
+  /**
+   * Sends an `HttpRequest` and returns a stream of `HttpEvent`s.
+   *
+   * @return An `Observable` of the response, with the response body as a stream of `HttpEvent`s.
+   */
+  request<R>(req: HttpRequest<any>): Observable<HttpEvent<R>>;
+  /**
+   * Constructs a request that interprets the body as an `ArrayBuffer` and returns the response in
+   * an `ArrayBuffer`.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a request that interprets the body as a blob and returns
+   * the response as a blob.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type `Blob`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a request that interprets the body as a text string and
+   * returns a string value.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type string.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a request that interprets the body as an `ArrayBuffer` and returns the
+   * the full event stream.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body as an array of `HttpEvent`s for
+   * the request.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      observe: 'events';
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a request that interprets the body as a `Blob` and returns
+   * the full event stream.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body of type `Blob`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a request which interprets the body as a text string and returns the full event
+   * stream.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body of type string.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a request which interprets the body as a JSON object and returns the full event
+   * stream.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the  request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body of type `Object`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      reportProgress?: boolean;
+      observe: 'events';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<any>>;
+  /**
+   * Constructs a request which interprets the body as a JSON object and returns the full event
+   * stream.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body of type `R`.
+   */
+  request<R>(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      reportProgress?: boolean;
+      observe: 'events';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<R>>;
+  /**
+   * Constructs a request which interprets the body as an `ArrayBuffer`
+   * and returns the full `HttpResponse`.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body as an `ArrayBuffer`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a request which interprets the body as a `Blob` and returns the full `HttpResponse`.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body of type `Blob`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a request which interprets the body as a text stream and returns the full
+   * `HttpResponse`.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the HTTP response, with the response body of type string.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a request which interprets the body as a JSON object and returns the full
+   * `HttpResponse`.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the full `HttpResponse`,
+   * with the response body of type `Object`.
+   */
+  request(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      reportProgress?: boolean;
+      observe: 'response';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a request which interprets the body as a JSON object and returns
+   * the full `HttpResponse` with the response body in the requested type.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return  An `Observable` of the full `HttpResponse`, with the response body of type `R`.
+   */
+  request<R>(
+    method: string,
+    url: string,
+    options: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      reportProgress?: boolean;
+      observe: 'response';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<R>>;
+  /**
+   * Constructs a request which interprets the body as a JSON object and returns the full
+   * `HttpResponse` as a JSON object.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body of type `Object`.
+   */
+  request(
+    method: string,
+    url: string,
+    options?: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      responseType?: 'json';
+      reportProgress?: boolean;
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a request which interprets the body as a JSON object
+   * with the response body of the requested type.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body of type `R`.
+   */
+  request<R>(
+    method: string,
+    url: string,
+    options?: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      responseType?: 'json';
+      reportProgress?: boolean;
+      withCredentials?: boolean;
+    },
+  ): Observable<R>;
+  /**
+   * Constructs a request where response type and requested observable are not known statically.
+   *
+   * @param method  The HTTP method.
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the requested response, with body of type `any`.
+   */
+  request(
+    method: string,
+    url: string,
+    options?: {
+      body?: any;
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      observe?: 'body' | 'events' | 'response';
+      reportProgress?: boolean;
+      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<any>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as an `ArrayBuffer`
+   *  and returns the response as an `ArrayBuffer`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return  An `Observable` of the response body as an `ArrayBuffer`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a `Blob` and returns
+   * the response as a `Blob`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response body as a `Blob`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a text string and returns
+   * a string.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type string.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as an `ArrayBuffer`
+   *  and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with response body as an `ArrayBuffer`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a `Blob`
+   *  and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request, with the response body as a
+   * `Blob`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a text string
+   * and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with the response
+   * body of type string.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a JSON object
+   * and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with response body of
+   * type `Object`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs a `DELETE`request that interprets the body as a JSON object
+   * and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request, with a response
+   * body in the requested type.
+   */
+  delete<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | (string | number | boolean)[];
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as an `ArrayBuffer` and returns
+   *  the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the full `HttpResponse`, with the response body as an `ArrayBuffer`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a `Blob` and returns the full
+   * `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body of type `Blob`.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a text stream and
+   *  returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the full `HttpResponse`, with the response body of type string.
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a `DELETE` request the interprets the body as a JSON object and returns
+   * the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body of type `Object`.
+   *
+   */
+  delete(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a JSON object
+   * and returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with the response body of the requested type.
+   */
+  delete<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs a `DELETE` request that interprets the body as a JSON object and
+   * returns the response body as a JSON object.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type `Object`.
+   */
+  delete(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a DELETE request that interprets the body as a JSON object and returns
+   * the response in a given type.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with response body in the requested type.
+   */
+  delete<T>(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+      body?: any | null;
+    },
+  ): Observable<T>;
+  /**
+   * Constructs a `GET` request that interprets the body as an `ArrayBuffer` and returns the
+   * response in an `ArrayBuffer`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a `GET` request that interprets the body as a `Blob`
+   * and returns the response as a `Blob`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body as a `Blob`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a `GET` request that interprets the body as a text string
+   * and returns the response as a string value.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type string.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a `GET` request that interprets the body as an `ArrayBuffer` and returns
+   *  the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with the response
+   * body as an `ArrayBuffer`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a `Blob` and
+   * returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body as a `Blob`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a text string and returns
+   * the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type string.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a JSON object
+   * and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type `Object`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a JSON object and returns the full event
+   * stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with a response body in the requested type.
+   */
+  get<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs a `GET` request that interprets the body as an `ArrayBuffer` and
+   * returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a `Blob` and
+   * returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as a `Blob`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a text stream and
+   * returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body of type string.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a JSON object and
+   * returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the full `HttpResponse`,
+   * with the response body of type `Object`.
+   */
+  get(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a JSON object and
+   * returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the full `HttpResponse` for the request,
+   * with a response body in the requested type.
+   */
+  get<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs a `GET` request that interprets the body as a JSON object and
+   * returns the response body as a JSON object.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   *
+   * @return An `Observable` of the response body as a JSON object.
+   */
+  get(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a `GET` request that interprets the body as a JSON object and returns
+   * the response body in a given type.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse`, with a response body in the requested type.
+   */
+  get<T>(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<T>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as an `ArrayBuffer` and
+   * returns the response as an `ArrayBuffer`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a `Blob` and returns
+   * the response as a `Blob`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return  An `Observable` of the response, with the response body as a `Blob`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a text string and returns the response
+   * as a string value.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body of type string.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as an  `ArrayBuffer`
+   *  and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a `Blob` and
+   * returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as a `Blob`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a text string
+   * and returns the full event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with the response body of type
+   * string.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a JSON object
+   * and returns the full HTTP event stream.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with a response body of
+   * type `Object`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a JSON object and
+   * returns the full event stream.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request,
+   * with a response body in the requested type.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   */
+  head<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as an `ArrayBuffer`
+   *  and returns the full HTTP response.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a `Blob` and returns
+   * the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as a blob.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as text stream
+   * and returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body of type string.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a JSON object and
+   * returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body of type `Object`.
+   */
+  head(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a JSON object
+   * and returns the full `HttpResponse`.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with a response body of the requested type.
+   */
+  head<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a JSON object and
+   * returns the response body as a JSON object.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the response, with the response body as a JSON object.
+   */
+  head(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a `HEAD` request that interprets the body as a JSON object and returns
+   * the response in a given type.
+   *
+   * @param url     The endpoint URL.
+   * @param options The HTTP options to send with the request.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with a response body of the given type.
+   */
+  head<T>(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<T>;
+  /**
+   * Constructs a `JSONP` request for the given URL and name of the callback parameter.
+   *
+   * @param url The resource URL.
+   * @param callbackParam The callback function name.
+   *
+   * @return An `Observable` of the response object, with response body as an object.
+   */
+  jsonp(url: string, callbackParam: string): Observable<Object>;
+  /**
+   * Constructs a `JSONP` request for the given URL and name of the callback parameter.
+   *
+   * @param url The resource URL.
+   * @param callbackParam The callback function name.
+   *
+   * You must install a suitable interceptor, such as one provided by `HttpClientJsonpModule`.
+   * If no such interceptor is reached,
+   * then the `JSONP` request can be rejected by the configured backend.
+   *
+   * @return An `Observable` of the response object, with response body in the requested type.
+   */
+  jsonp<T>(url: string, callbackParam: string): Observable<T>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as an
+   * `ArrayBuffer` and returns the response as an `ArrayBuffer`.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a `Blob` and returns
+   * the response as a `Blob`.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as a `Blob`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a text string and
+   * returns a string value.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body of type string.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as an `ArrayBuffer`
+   *  and returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return  An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a `Blob` and
+   * returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as a `Blob`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a text string
+   * and returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request,
+   * with the response body of type string.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a JSON object
+   * and returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request with the response
+   * body of type `Object`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a JSON object and
+   * returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request,
+   * with a response body in the requested type.
+   */
+  options<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as an `ArrayBuffer`
+   *  and returns the full HTTP response.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a `Blob`
+   *  and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as a `Blob`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as text stream
+   * and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body of type string.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a JSON object
+   * and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body of type `Object`.
+   */
+  options(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a JSON object and
+   * returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with a response body in the requested type.
+   */
+  options<T>(
+    url: string,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a JSON object and returns the
+   * response body as a JSON object.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as a JSON object.
+   */
+  options(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs an `OPTIONS` request that interprets the body as a JSON object and returns the
+   * response in a given type.
+   *
+   * @param url The endpoint URL.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse`, with a response body of the given type.
+   */
+  options<T>(
+    url: string,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<T>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as an `ArrayBuffer` and returns
+   * the response as an `ArrayBuffer`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a `Blob` and returns the response
+   * as a `Blob`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as a `Blob`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a text string and
+   * returns the response as a string value.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with a response body of type string.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as an `ArrayBuffer` and
+   *  returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a `Blob`
+   *  and returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request, with the
+   * response body as `Blob`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a text string and
+   * returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request, with a
+   * response body of type string.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a JSON object
+   * and returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request,
+   * with a response body of type `Object`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a JSON object
+   * and returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of all the `HttpEvent`s for the request,
+   * with a response body in the requested type.
+   */
+  patch<T>(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as an `ArrayBuffer`
+   *  and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a `Blob` and returns the full
+   * `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request,
+   * with the response body as a `Blob`.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a text stream and returns the
+   * full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request,
+   * with a response body of type string.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a JSON object
+   * and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with a response body in the requested type.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a JSON object
+   * and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with a response body in the given type.
+   */
+  patch<T>(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a JSON object and
+   * returns the response body as a JSON object.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as a JSON object.
+   */
+  patch(
+    url: string,
+    body: any | null,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a `PATCH` request that interprets the body as a JSON object
+   * and returns the response in a given type.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to edit.
+   * @param options HTTP options.
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request,
+   * with a response body in the given type.
+   */
+  patch<T>(
+    url: string,
+    body: any | null,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<T>;
+  /**
+   * Constructs a `POST` request that interprets the body as an `ArrayBuffer` and returns
+   * an `ArrayBuffer`.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options.
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a `POST` request that interprets the body as a `Blob` and returns the
+   * response as a `Blob`.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response, with the response body as a `Blob`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a `POST` request that interprets the body as a text string and
+   * returns the response as a string value.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response, with a response body of type string.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a `POST` request that interprets the body as an `ArrayBuffer` and
+   * returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a `Blob`
+   * and returns the response in an observable of the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with the response body as `Blob`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a text string and returns the full
+   * event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return  An `Observable` of all `HttpEvent`s for the request,
+   * with a response body of type string.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a POST request that interprets the body as a JSON object and returns the full event
+   * stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return  An `Observable` of all `HttpEvent`s for the request,
+   * with a response body of type `Object`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs a POST request that interprets the body as a JSON object and returns the full event
+   * stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with a response body in the requested type.
+   */
+  post<T>(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs a POST request that interprets the body as an `ArrayBuffer`
+   *  and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request, with the response body as an
+   * `ArrayBuffer`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a `Blob` and returns the full
+   * `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as a `Blob`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a text stream and returns
+   * the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request,
+   * with a response body of type string.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a JSON object
+   * and returns the full `HttpResponse`.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request, with a response body of type
+   * `Object`.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a JSON object and returns the full
+   * `HttpResponse`.
+   *
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request, with a response body in the
+   * requested type.
+   */
+  post<T>(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs a `POST` request that interprets the body as a
+   * JSON object and returns the response body as a JSON object.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response, with the response body as a JSON object.
+   */
+  post(
+    url: string,
+    body: any | null,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a `POST` request that interprets the body as a JSON object
+   * and returns an observable of the response.
+   *
+   * @param url The endpoint URL.
+   * @param body The content to replace with.
+   * @param options HTTP options
+   *
+   * @return  An `Observable` of the `HttpResponse` for the request, with a response body in the
+   * requested type.
+   */
+  post<T>(
+    url: string,
+    body: any | null,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<T>;
+  /**
+   * Constructs a `PUT` request that interprets the body as an `ArrayBuffer` and returns the
+   * response as an `ArrayBuffer`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response, with the response body as an `ArrayBuffer`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<ArrayBuffer>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a `Blob` and returns
+   * the response as a `Blob`.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response, with the response body as a `Blob`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<Blob>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a text string and
+   * returns the response as a string value.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response, with a response body of type string.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<string>;
+  /**
+   * Constructs a `PUT` request that interprets the body as an `ArrayBuffer` and
+   * returns the full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as an `ArrayBuffer`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<ArrayBuffer>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a `Blob` and returns the full event
+   * stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with the response body as a `Blob`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Blob>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a text string and returns the full event
+   * stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with a response body
+   * of type string.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<string>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a JSON object and returns the full event
+   * stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request, with a response body of
+   * type `Object`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<Object>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a JSON object and returns the
+   * full event stream.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of all `HttpEvent`s for the request,
+   * with a response body in the requested type.
+   */
+  put<T>(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'events';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpEvent<T>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as an
+   * `ArrayBuffer` and returns an observable of the full HTTP response.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request, with the response body as an
+   * `ArrayBuffer`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'arraybuffer';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<ArrayBuffer>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a `Blob` and returns the
+   * full HTTP response.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with the response body as a `Blob`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'blob';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Blob>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a text stream and returns the
+   * full HTTP response.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request, with a response body of type
+   * string.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType: 'text';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<string>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a JSON object and returns the full HTTP
+   * response.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request, with a response body
+   * of type 'Object`.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<Object>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as an instance of the requested type and
+   * returns the full HTTP response.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the `HttpResponse` for the request,
+   * with a response body in the requested type.
+   */
+  put<T>(
+    url: string,
+    body: any | null,
+    options: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      observe: 'response';
+      context?: HttpContext;
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<HttpResponse<T>>;
+  /**
+   * Constructs a `PUT` request that interprets the body as a JSON object
+   * and returns an observable of JSON object.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the response as a JSON object.
+   */
+  put(
+    url: string,
+    body: any | null,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<Object>;
+  /**
+   * Constructs a `PUT` request that interprets the body as an instance of the requested type
+   * and returns an observable of the requested type.
+   *
+   * @param url The endpoint URL.
+   * @param body The resources to add/update.
+   * @param options HTTP options
+   *
+   * @return An `Observable` of the requested type.
+   */
+  put<T>(
+    url: string,
+    body: any | null,
+    options?: {
+      headers?:
+        | HttpHeaders
+        | {
+            [header: string]: string | string[];
+          };
+      context?: HttpContext;
+      observe?: 'body';
+      params?:
+        | HttpParams
+        | {
+            [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>;
+          };
+      reportProgress?: boolean;
+      responseType?: 'json';
+      withCredentials?: boolean;
+    },
+  ): Observable<T>;
+}
+
+interface EspApi {
+  byAction: (params: EspApiByActionParams) => EspApiResponse;
+  byActionId: (params: EspApiByActionIdParams) => EspApiResponse;
+}
+
+interface EspApiResponse {
+  status: number;
+  statusDescription: string;
+  response: { [key: string]: any };
+}
+
+interface TmQueryAction {
+  name: string;
+  dataKeys?: any[];
+  actionId: string;
+  type: string;
+  limit?: number;
+  metadataFields?: any[];
+  notArray?: boolean;
+  override?: boolean;
+  actionParams?: {
+    name: string;
+    type: string;
+    value: string;
+  }[];
+}
+
+interface SortInfoProps {
+  sort_field: string;
+  sort_type: string;
+  sort_seq: string;
+}
+
+interface searchInfoProps {
+  search_field: string;
+  search_operator: string;
+  search_value: string;
+}
+
+interface EspApiByActionParams {
+  actionId: string;
+  serviceName?: string;
+  type?: string;
+  actionParams?: any[];
+  businessUnit?: { [key: string]: any };
+  bpmData?: { [key: string]: any };
+  paras?: { [key: string]: any };
+  pageInfo?: {
+    nextAllData: boolean;
+    pageNo: number;
+    pageSize: number;
+  };
+  sortInfo?: SortInfoProps[];
+  searchInfo?: searchInfoProps[];
+}
+
+interface EspApiByActionIdParams {
+  actionId: string;
+  businessUnit?: { [key: string]: any };
+  parameter?: { [key: string]: any };
+  pageInfo?: {
+    nextAllData: boolean;
+    pageNo: number;
+    pageSize: number;
+  };
+  sortInfo?: SortInfoProps[];
+  searchInfo?: searchInfoProps[];
+}
+
+declare class NzModalService implements OnDestroy {
+  private overlay;
+  private injector;
+  private nzConfigService;
+  private parentModal;
+  private directionality;
+  private openModalsAtThisLevel;
+  private readonly afterAllClosedAtThisLevel;
+  get openModals(): NzModalRef[];
+  get _afterAllClosed(): Subject<void>;
+  readonly afterAllClose: Observable<void>;
+  constructor(
+    overlay: Overlay,
+    injector: Injector,
+    nzConfigService: NzConfigService,
+    parentModal: NzModalService,
+    directionality: Directionality,
+  );
+  create<T, R = NzSafeAny>(config: ModalOptions<T, R>): NzModalRef<T, R>;
+  closeAll(): void;
+  confirm<T>(options?: ModalOptions<T>, confirmType?: ConfirmType): NzModalRef<T>;
+  info<T>(options?: ModalOptions<T>): NzModalRef<T>;
+  success<T>(options?: ModalOptions<T>): NzModalRef<T>;
+  error<T>(options?: ModalOptions<T>): NzModalRef<T>;
+  warning<T>(options?: ModalOptions<T>): NzModalRef<T>;
+  private open;
+  private removeOpenModal;
+  private closeModals;
+  private createOverlay;
+  private attachModalContainer;
+  private attachModalContent;
+  private createInjector;
+  private confirmFactory;
+  ngOnDestroy(): void;
+}
+
+declare interface OnDestroy {
+  ngOnDestroy(): void;
+}
+
+interface ModalCustom {
+  prompt<T, R = NzSafeAny>(
+    config: AthModalOptions<T, R>,
+    required?: boolean,
+    defaultContent?: string,
+    supportInfo?: string,
+  ): NzModalRef<T, R>;
+  confirm<T>(options: AthModalOptions<T>, confirmType: ConfirmType): NzModalRef<T>;
+  create<T, R = NzSafeAny>(config: AthModalOptions<T, R>, modalGridConfig?: ModalGridConfig): NzModalRef<T, R>;
+}
+
+declare class NzMessageService extends NzMNService {
+  protected container?: NzMessageContainerComponent;
+  protected componentPrefix: string;
+  constructor(nzSingletonService: NzSingletonService, overlay: Overlay, injector: Injector);
+  success(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef;
+  error(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef;
+  info(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef;
+  warning(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef;
+  loading(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef;
+  create(
+    type: 'success' | 'info' | 'warning' | 'error' | 'loading' | string,
+    content: string | TemplateRef<void>,
+    options?: NzMessageDataOptions,
+  ): NzMessageRef;
+  private createInstance;
+}
+
+declare abstract class NzMNService {
+  protected nzSingletonService: NzSingletonService;
+  protected overlay: Overlay;
+  private injector;
+  protected abstract componentPrefix: string;
+  protected container?: NzMNContainerComponent;
+  constructor(nzSingletonService: NzSingletonService, overlay: Overlay, injector: Injector);
+  remove(id?: string): void;
+  protected getInstanceId(): string;
+  protected withContainer<T extends NzMNContainerComponent>(ctor: ComponentType<T>): T;
+}
+declare abstract class NzMNContainerComponent implements OnInit, OnDestroy {
+  protected cdr: ChangeDetectorRef;
+  protected nzConfigService: NzConfigService;
+  config?: Required<MessageConfig>;
+  instances: Array<Required<NzMessageData>>;
+  protected readonly destroy$: Subject<void>;
+  constructor(cdr: ChangeDetectorRef, nzConfigService: NzConfigService);
+  ngOnInit(): void;
+  ngOnDestroy(): void;
+  create(data: NzMessageData): Required<NzMessageData>;
+  remove(id: string, userAction?: boolean): void;
+  removeAll(): void;
+  protected onCreate(instance: NzMessageData): Required<NzMessageData>;
+  protected onRemove(instance: Required<NzMessageData>, userAction: boolean): void;
+  protected readyInstances(): void;
+  protected abstract updateConfig(): void;
+  protected abstract subscribeConfigChange(): void;
+  protected mergeOptions(options?: NzMessageDataOptions): NzMessageDataOptions;
+}
+declare abstract class NzMNComponent implements OnInit, OnDestroy {
+  protected cdr: ChangeDetectorRef;
+  instance: Required<NzMessageData>;
+  index?: number;
+  readonly destroyed: EventEmitter<{
+    id: string;
+    userAction: boolean;
+  }>;
+  readonly animationStateChanged: Subject<AnimationEvent>;
+  protected options: Required<NzMessageDataOptions>;
+  protected autoClose?: boolean;
+  protected closeTimer?: number;
+  protected userAction: boolean;
+  protected eraseTimer: number | null;
+  protected eraseTimingStart?: number;
+  protected eraseTTL: number;
+  protected constructor(cdr: ChangeDetectorRef);
+  ngOnInit(): void;
+  ngOnDestroy(): void;
+  onEnter(): void;
+  onLeave(): void;
+  protected destroy(userAction?: boolean): void;
+  private initErase;
+  private updateTTL;
+  private startEraseTimeout;
+  private clearEraseTimeout;
+}
+declare class NzMessageContainerComponent extends NzMNContainerComponent {
+  readonly destroy$: Subject<void>;
+  dir: Direction;
+  instances: Array<Required<NzMessageData>>;
+  top?: string | null;
+  constructor(cdr: ChangeDetectorRef, nzConfigService: NzConfigService);
+  protected subscribeConfigChange(): void;
+  protected updateConfig(): void;
+}
+declare type NzMessageType = 'success' | 'info' | 'warning' | 'error' | 'loading';
+interface NzMessageDataOptions {
+  nzDuration?: number;
+  nzAnimate?: boolean;
+  nzPauseOnHover?: boolean;
+}
+interface NzMessageData {
+  type?: NzMessageType | string;
+  content?: string | TemplateRef<void>;
+  messageId?: string;
+  createdAt?: Date;
+  options?: NzMessageDataOptions;
+  state?: 'enter' | 'leave';
+  onClose?: Subject<boolean>;
+}
+declare type NzMessageRef = Pick<Required<NzMessageData>, 'onClose' | 'messageId'>;
+interface MessageCustom {
+  custom(content: string | TemplateRef<void>, options?: NzMessageDataOptions): NzMessageRef;
+  addIndex(): void;
+}
+
+declare namespace _lo {
   interface LoDashStatic {
     /**
      * Creates a lodash object which wraps the given value to enable intuitive method chaining.
@@ -13247,16 +17336,13 @@ declare namespace _ {
 }
 
 declare function dayjs(date?: dayjs.ConfigType): dayjs.Dayjs;
-
 declare function dayjs(date?: dayjs.ConfigType, format?: dayjs.OptionType, strict?: boolean): dayjs.Dayjs;
-
 declare function dayjs(
   date?: dayjs.ConfigType,
   format?: dayjs.OptionType,
   locale?: string,
   strict?: boolean,
 ): dayjs.Dayjs;
-
 declare namespace dayjs {
   interface ConfigTypeMap {
     default: string | number | Date | Dayjs | null | undefined;
