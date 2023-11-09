@@ -110,7 +110,7 @@ interface Utils {
   espApi: EspApi;
   athModalService: NzModalService & ModalCustom;
   athMessageService: NzMessageService & MessageCustom;
-  lodash: typeof _lo.LoDashStatic;
+  lodash: typeof _.LoDashStatic;
   dayjs: typeof dayjs;
 }
 
@@ -4104,7 +4104,7 @@ interface MessageCustom {
   addIndex(): void;
 }
 
-declare namespace _lo {
+declare namespace _ {
   interface LoDashStatic {
     /**
      * Creates a lodash object which wraps the given value to enable intuitive method chaining.
