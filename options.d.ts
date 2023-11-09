@@ -6,7 +6,7 @@ interface HookOptions {
   utils: Utils;
 }
 
-export interface Context {
+interface Context {
   /**
    * 数据一致性异常排除任务卡id
    */
